@@ -1,0 +1,15 @@
+@import './fonts.css';
+@import './variables.css';
+
+@import './base.css';
+
+@import './components/header.css';
+@import './components/breadcrumbs.css';
+@import './components/product.css';
+@import './components/suggestions.css';
+@import './components/footer.css';
+@import './components/mobileMenu.css';
+
+@import './mediaQueries.css';
+
+@import './components/modal.css';

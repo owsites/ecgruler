@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex">
+
+    <link
+      crossorigin="anonymous"
+      media="all"
+      rel="stylesheet"
+      href="./styles/index.css"
+    />
+    <title>ECGRuler.com - Track Your Delivery</title>
+      <style>
+
+    .tracking-container {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    .tracking-container h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .tracking-container input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .tracking-container button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .tracking-container button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+  </head>
+
+  <body>
+    <header class="header">
+      
+      <nav class="header-navigation wrapper">
+      <a class="logo" href="ecgruler.com">
+      <span class="visually-hidden">ECG Ruler</span>
+      <img class="logo__image" src="./img/logo.png" alt="ECG Ruler Logo" />
+    </a>
+        <ul class="header-navigation__list">
+          <li class="header-navigation__item">
+            <span class="">Qatalyst Medical Publishing Co.</span>
+          </li>
+        </ul>
+        <ul class="header-navigation__list">
+          <li class="header-navigation__item">
+            <a class="header-navigation__link" href="#">Home</a>
+          </li>
+          <li class="header-navigation__item">
+            <a class="header-navigation__link" href="#">Track Order</a>
+          </li>
+          <li class="header-navigation__item">
+            <a class="header-navigation__link" href="#">Support</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" class="wrapper" tabindex="-1">
+      <article class="product product--two-columns">
+        <h1 class="visually-hidden">ECG Ruler</h1>
+        <div style="align-content: center;" class="product__content">
+<div class="tracking-container">
+  <h1>Track Your Speedpost</h1>
+  <input type="text" id="trackingId" placeholder="Enter your Tracking ID" />
+  <br />
+  <button id="trackButton">Track</button>
+</div>
+
+        </div>
+       </article>
+
+    </main>
+<footer class="footer">
+      <div class="footer__container wrapper">
+        <section class="section section--address">
+          <h2 class="heading heading--footer">Company</h2>
+          <address class="address">
+            <div class="paragraph paragraph--address">
+              <p>Qatalyst Medical Publishing Co.</p>
+            </div>
+            <ul class="social">
+              <li class="social__item">
+                <a href="https://www.instagram.com/ecg_ruler/"
+                  ><span class="icon icon--instagram">
+                    <span class="visually-hidden">Instagram</span>
+                  </span></a
+                >
+              </li>
+            </ul>
+          </address>
+        </section>
+
+
+        <section class="section">
+          <h2 class="heading heading--footer">Customer Care</h2>
+          <ul class="footer-list">
+            <li class="footer-list__item">
+              <a class="footer-list__link" target="_blank" href="https://qatalyst.zohodesk.in/portal/en/newticket">Raise a Ticket</a>
+            </li>
+            <li class="footer-list__item">
+              <a class="footer-list__link" href="mailto:support@qatalyst.zohodesk.in">Email</a>
+            </li>
+          </ul>
+        </section>
+        <section class="section">
+          <h2 class="heading heading--footer">Legal</h2>
+          <ul class="footer-list">
+            <li class="footer-list__item">
+              <a class="footer-list__link" href="privacy-policy.html">Privacy Policy </a>
+            </li>
+            <li class="footer-list__item">
+              <a class="footer-list__link" href="shipping-policy.html"> Shipping and Delivery </a>
+            </li>
+            <li class="footer-list__item">
+              <a class="footer-list__link" href="replacement.html">Replacement & Refund </a>
+            </li>
+            <li class="footer-list__item">
+              <a class="footer-list__link" href="terms.html">Terms of Service </a>
+            </li>
+
+          </ul>
+        </section>
+      </div>
+      <div class="copyright wrapper">
+        <small class="copyright__text">© Qatalyst 2024-2025</small>
+      </div>
+    </footer>
+
+    <script src="./js/index.js" type="module"></script>
+<script>
+  document.getElementById('trackButton').addEventListener('click', function () {
+    const trackingId = document.getElementById('trackingId').value.trim();
+    if (trackingId) {
+      const trackingUrl = `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx?consignmentno=${trackingId}`;
+      window.open(trackingUrl, '_blank');
+    } else {
+      alert('Please enter a valid Tracking ID.');
+    }
+  });
+</script>
+</html>
