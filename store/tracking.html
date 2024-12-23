@@ -149,13 +149,14 @@
     <script src="./js/index.js" type="module"></script>
 <script>
   document.getElementById('trackButton').addEventListener('click', function () {
-    const trackingId = document.getElementById('trackingId').value.trim();
-    if (trackingId) {
-      const trackingUrl = `https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx?consignmentno=${trackingId}`;
-      window.open(trackingUrl, '_blank');
-    } else {
-      alert('Please enter a valid Tracking ID.');
-    }
-  });
+  const trackingId = document.getElementById('trackingId').value.trim();
+  if (trackingId) {
+    const trackingUrl = `https://www.indiapost.gov.in/MBE/Pages/track-consignment.aspx?consignmentno=${trackingId}`;
+    window.open(trackingUrl, '_blank');
+  } else {
+    alert('Please enter a valid Tracking ID.');
+  }
+});
+//tracking
 </script>
 </html>
