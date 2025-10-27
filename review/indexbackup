@@ -1,0 +1,748 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>ECG Ruler Review Program - Earn Rs. 100</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Lato", sans-serif;
+                background: #f5f5f5;
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .container {
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                max-width: 600px;
+                width: 100%;
+                padding: 40px;
+                animation: fadeIn 0.5s ease-in;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            h1 {
+                color: #333;
+                margin-bottom: 10px;
+                font-size: 28px;
+                text-align: center;
+            }
+
+            .step-indicator {
+                display: flex;
+                justify-content: center;
+                margin: 30px 0;
+                gap: 10px;
+            }
+
+            .step-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #ddd;
+                transition: all 0.3s;
+            }
+
+            .step-dot.active {
+                background: #667eea;
+                transform: scale(1.3);
+            }
+
+            .step {
+                display: none;
+            }
+
+            .step.active {
+                display: block;
+                animation: fadeIn 0.5s ease-in;
+            }
+
+            .highlight-box {
+                background: #fff3cd;
+                border-left: 4px solid #ffc107;
+                padding: 15px;
+                margin: 20px 0;
+                border-radius: 4px;
+            }
+
+            .highlight-box strong {
+                color: #d39e00;
+                font-size: 18px;
+            }
+
+            .instructions {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 8px;
+                margin: 20px 0;
+            }
+
+            .instructions h3 {
+                color: #495057;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+
+            .instructions ol {
+                margin-left: 20px;
+            }
+
+            .instructions li {
+                margin: 12px 0;
+                color: #555;
+                line-height: 1.6;
+            }
+
+            .amazon-link {
+                display: inline-block;
+                background: #ff9900;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 6px;
+                text-decoration: none;
+                margin: 20px 0;
+                font-weight: bold;
+                transition: background 0.3s;
+            }
+
+            .amazon-link:hover {
+                background: #e88900;
+            }
+
+            .review-box {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: 4px solid #5568d3;
+                padding: 30px;
+                border-radius: 12px;
+                margin: 25px 0;
+                cursor: pointer;
+                transition: all 0.3s;
+                position: relative;
+                box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            }
+
+            .review-box:hover {
+                box-shadow: 0 12px 32px rgba(102, 126, 234, 0.5);
+                transform: translateY(-4px);
+            }
+
+            .review-box h4 {
+                color: #ffffff;
+                margin-bottom: 15px;
+                font-size: 20px;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            .review-text {
+                color: #ffffff;
+                line-height: 1.8;
+                font-size: 17px;
+                background: rgba(255, 255, 255, 0.15);
+                padding: 20px;
+                border-radius: 8px;
+                backdrop-filter: blur(10px);
+                font-weight: 400;
+            }
+
+            .copy-hint {
+                text-align: center;
+                color: #ffffff;
+                font-size: 15px;
+                margin-top: 15px;
+                font-style: italic;
+                font-weight: 300;
+            }
+
+            .copied-notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                display: none;
+                animation: slideIn 0.3s ease-out;
+                z-index: 1000;
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            .form-group {
+                margin: 20px 0;
+            }
+
+            .form-group label {
+                display: block;
+                color: #333;
+                font-weight: 600;
+                margin-bottom: 8px;
+                font-size: 15px;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #ddd;
+                border-radius: 6px;
+                font-size: 15px;
+                transition: border-color 0.3s;
+            }
+
+            .form-group input:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+
+            .form-group input.error {
+                border-color: #dc3545;
+            }
+
+            .error-message {
+                color: #dc3545;
+                font-size: 13px;
+                margin-top: 5px;
+                display: none;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 14px;
+                background: #667eea;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.3s;
+                margin-top: 20px;
+            }
+
+            .btn:hover {
+                background: #5568d3;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            }
+
+            .btn:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .btn-back {
+                background: #6c757d;
+                margin-top: 10px;
+            }
+
+            .btn-back:hover {
+                background: #5a6268;
+            }
+
+            .final-message {
+                text-align: center;
+                padding: 20px;
+            }
+
+            .final-message h2 {
+                color: #28a745;
+                margin-bottom: 20px;
+                font-size: 24px;
+            }
+
+            .final-message p {
+                color: #555;
+                line-height: 1.8;
+                font-size: 16px;
+            }
+
+            .success-icon {
+                font-size: 60px;
+                margin-bottom: 20px;
+            }
+
+            @media (max-width: 600px) {
+                .container {
+                    padding: 25px;
+                }
+
+                h1 {
+                    font-size: 24px;
+                }
+
+                .instructions li {
+                    font-size: 14px;
+                }
+
+                .copied-notification {
+                    top: 10px;
+                    right: 10px;
+                    left: 10px;
+                    text-align: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>ECG Ruler Review Program</h1>
+
+            <!-- Step Indicator -->
+            <div class="step-indicator">
+                <div class="step-dot active" data-step="1"></div>
+                <div class="step-dot" data-step="2"></div>
+                <div class="step-dot" data-step="3"></div>
+            </div>
+
+            <!-- Step 1: Instructions and Review -->
+            <div class="step active" id="step1">
+                <div class="highlight-box">
+                    <strong>🎁 Earn Rs. 100 per 5-star review!</strong>
+                </div>
+
+                <div class="instructions">
+                    <h3>📋 How to Submit Your Review:</h3>
+                    <ol>
+                        <li>
+                            <strong>Step 1:</strong> Click the button below to
+                            visit the Amazon review page
+                        </li>
+                        <li>
+                            <strong>Step 2:</strong> Click on the review box
+                            below to automatically copy it
+                        </li>
+                        <li>
+                            <strong>Step 3:</strong> Paste the review on Amazon
+                            and give a 5-star rating
+                        </li>
+                        <li>
+                            <strong>Step 4:</strong> Click "Proceed" to enter
+                            your payment details
+                        </li>
+                    </ol>
+                </div>
+
+                <a
+                    href="https://www.amazon.in/review/create-review/ref=cm_cr_othr_d_wr_but_top?ie=UTF8&channel=glance-detail&asin=B0DQHH7GLT"
+                    target="_blank"
+                    class="amazon-link"
+                >
+                    📝 Open Amazon Review Page
+                </a>
+
+                <div class="review-box" id="reviewBox" onclick="copyReview()">
+                    <h4>Your Review (Click to Copy):</h4>
+                    <div class="review-text" id="reviewText"></div>
+                    <div class="copy-hint">
+                        👆 Click anywhere to copy this review
+                    </div>
+                </div>
+
+                <button class="btn" onclick="goToStep(2)">
+                    Proceed to Payment Details →
+                </button>
+            </div>
+
+            <!-- Step 2: Form -->
+            <div class="step" id="step2">
+                <div class="instructions">
+                    <h3>💰 Enter Your Payment Details</h3>
+                    <p style="color: #555; margin-top: 10px">
+                        We'll verify your review and process payment within
+                        24-48 hours.
+                    </p>
+                </div>
+
+                <form
+                    id="reviewForm"
+                    action="https://submit-form.com/Qvg8kG7fI"
+                    method="POST"
+                >
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            required
+                        />
+                        <div class="error-message" id="nameError">
+                            Please enter your full name
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amazonUsername">Amazon Username *</label>
+                        <input
+                            type="text"
+                            id="amazonUsername"
+                            name="amazonUsername"
+                            required
+                        />
+                        <div class="error-message" id="usernameError">
+                            Please enter your Amazon username
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="upiId">GPay/UPI ID *</label>
+                        <input
+                            type="text"
+                            id="upiId"
+                            name="upiId"
+                            placeholder="yourname@paytm"
+                            required
+                        />
+                        <div class="error-message" id="upiError">
+                            Please enter a valid UPI ID
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="whatsappNumber">WhatsApp Number *</label>
+                        <input
+                            type="tel"
+                            id="whatsappNumber"
+                            name="whatsappNumber"
+                            placeholder="9876543210"
+                            required
+                            maxlength="10"
+                        />
+                        <div class="error-message" id="whatsappError">
+                            Please enter a valid 10-digit WhatsApp number
+                        </div>
+                    </div>
+
+                    <input
+                        type="hidden"
+                        id="reviewSubmitted"
+                        name="review"
+                        value=""
+                    />
+
+                    <button type="submit" class="btn" id="submitBtn">
+                        Submit & Claim Rs. 100
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn-back"
+                        onclick="goToStep(1)"
+                    >
+                        ← Go Back
+                    </button>
+                </form>
+            </div>
+
+            <!-- Step 3: Confirmation -->
+            <div class="step" id="step3">
+                <div class="final-message">
+                    <div class="success-icon">✅</div>
+                    <h2>Review Submitted Successfully!</h2>
+                    <p>
+                        Thank you for your review! We will verify your
+                        submission and initiate the payment of
+                        <strong>Rs. 100</strong> to your UPI ID within
+                        <strong>24-48 hours</strong>.
+                    </p>
+                    <p style="margin-top: 20px; color: #666">
+                        You will receive a confirmation once the payment is
+                        processed.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Copied Notification -->
+        <div class="copied-notification" id="copiedNotification">
+            ✓ Review copied! Now paste it on Amazon
+        </div>
+
+        <script>
+            // 30+ Genuine Reviews for ECG Ruler
+            const reviews = [
+                "Very helpful tool for quick ECG analysis. Fits perfectly in my ID card holder. Highly recommend for medical students.",
+                "Compact and practical. The 5-step method makes ECG interpretation much easier during busy shifts.",
+                "Great educational tool. Helps me teach ECG basics to my juniors efficiently. Worth every penny.",
+                "Sturdy material and pocket-friendly size. Use it daily in the ER for quick reference.",
+                "Simple yet effective. No need to memorize everything when this ruler is handy.",
+                "Perfect for medical students preparing for exams. Makes ECG interpretation less stressful.",
+                "Durable and well-designed. The structured approach saves time during patient assessments.",
+                "As a resident doctor, this tool has become indispensable. Helps identify abnormalities quickly.",
+                "Love the compact size. Carries easily in my wallet and always available when needed.",
+                "Validated by cardiologists, and it shows. Accurate and reliable for daily clinical use.",
+                "Excellent teaching aid. My students find it much easier to learn ECG with this ruler.",
+                "High-quality material. Doesn't bend or break despite daily use. Great investment.",
+                "The 5-step approach is brilliant. Makes complex ECG interpretation systematic and manageable.",
+                "Fits in my pocket and has saved me multiple times during critical cases. Highly practical.",
+                "Clear markings and easy to understand. Even beginners can follow the steps confidently.",
+                "Best tool for quick axis determination and interval measurements. Use it every day.",
+                "Non-toxic material is a plus. Feel safe carrying it all the time.",
+                "Helps me interpret ECGs faster than before. More confident in my readings now.",
+                "Perfect size for paramedics. Essential tool for pre-hospital cardiac assessment.",
+                "Highly recommend for medical professionals at all levels. Simple and effective.",
+                "The step-by-step guide on the ruler is very intuitive. Makes learning enjoyable.",
+                "Recyclable and eco-friendly. Good product with environmental consciousness.",
+                "Has improved my ECG interpretation speed significantly. Great for time-sensitive situations.",
+                "Affordable and useful. Better than expensive apps or books for quick reference.",
+                "My entire team uses this now. Standard tool in our emergency department.",
+                "Lightweight and portable. Never leave home without it during clinical rotations.",
+                "Helps identify ST elevation MIs quickly. Could be life-saving in critical scenarios.",
+                "Great build quality. Withstands repeated use without any wear and tear.",
+                "Makes ECG learning less intimidating for new students. Highly effective teaching tool.",
+                "Convenient reference during night shifts when I need quick confirmation. Very reliable.",
+                "Well thought out design. Every measurement scale is placed perfectly for ease of use.",
+                "Helped me pass my cardiology exam with better understanding. Thank you for this tool.",
+                "Use it to double-check my interpretations. Gives me confidence in clinical decisions.",
+                "Highly portable and always accessible. Much better than carrying bulky reference books.",
+                "The patent-pending method is genuinely helpful. Makes systematic analysis second nature.",
+                "Recommended by my senior, and now I recommend it to everyone. Truly useful product.",
+            ];
+
+            let selectedReview = "";
+
+            // Initialize - select random review
+            function init() {
+                const randomIndex = Math.floor(Math.random() * reviews.length);
+                selectedReview = reviews[randomIndex];
+                document.getElementById("reviewText").textContent =
+                    selectedReview;
+                document.getElementById("reviewSubmitted").value =
+                    selectedReview;
+            }
+
+            // Copy review to clipboard
+            function copyReview() {
+                const reviewText =
+                    document.getElementById("reviewText").textContent;
+
+                navigator.clipboard
+                    .writeText(reviewText)
+                    .then(function () {
+                        // Show notification
+                        const notification =
+                            document.getElementById("copiedNotification");
+                        notification.style.display = "block";
+
+                        setTimeout(function () {
+                            notification.style.display = "none";
+                        }, 3000);
+                    })
+                    .catch(function (err) {
+                        // Fallback for older browsers
+                        const textArea = document.createElement("textarea");
+                        textArea.value = reviewText;
+                        textArea.style.position = "fixed";
+                        textArea.style.left = "-999999px";
+                        document.body.appendChild(textArea);
+                        textArea.select();
+
+                        try {
+                            document.execCommand("copy");
+                            const notification =
+                                document.getElementById("copiedNotification");
+                            notification.style.display = "block";
+                            setTimeout(function () {
+                                notification.style.display = "none";
+                            }, 3000);
+                        } catch (err) {
+                            alert("Please manually copy the review text");
+                        }
+
+                        document.body.removeChild(textArea);
+                    });
+            }
+
+            // Navigate between steps
+            function goToStep(stepNumber) {
+                // Hide all steps
+                const steps = document.querySelectorAll(".step");
+                steps.forEach((step) => step.classList.remove("active"));
+
+                // Show current step
+                document
+                    .getElementById("step" + stepNumber)
+                    .classList.add("active");
+
+                // Update step indicator
+                const dots = document.querySelectorAll(".step-dot");
+                dots.forEach((dot, index) => {
+                    if (index < stepNumber) {
+                        dot.classList.add("active");
+                    } else {
+                        dot.classList.remove("active");
+                    }
+                });
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+
+            // Form validation and submission
+            document
+                .getElementById("reviewForm")
+                .addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    const fullName = document
+                        .getElementById("fullName")
+                        .value.trim();
+                    const amazonUsername = document
+                        .getElementById("amazonUsername")
+                        .value.trim();
+                    const upiId = document.getElementById("upiId").value.trim();
+                    const whatsappNumber = document
+                        .getElementById("whatsappNumber")
+                        .value.trim();
+
+                    let isValid = true;
+
+                    // Validate full name
+                    if (fullName === "") {
+                        document.getElementById("nameError").style.display =
+                            "block";
+                        document
+                            .getElementById("fullName")
+                            .classList.add("error");
+                        isValid = false;
+                    } else {
+                        document.getElementById("nameError").style.display =
+                            "none";
+                        document
+                            .getElementById("fullName")
+                            .classList.remove("error");
+                    }
+
+                    // Validate Amazon username
+                    if (amazonUsername === "") {
+                        document.getElementById("usernameError").style.display =
+                            "block";
+                        document
+                            .getElementById("amazonUsername")
+                            .classList.add("error");
+                        isValid = false;
+                    } else {
+                        document.getElementById("usernameError").style.display =
+                            "none";
+                        document
+                            .getElementById("amazonUsername")
+                            .classList.remove("error");
+                    }
+
+                    // Validate UPI ID (basic validation)
+                    const upiPattern = /^[\w.-]+@[\w.-]+$/;
+                    if (upiId === "" || !upiPattern.test(upiId)) {
+                        document.getElementById("upiError").style.display =
+                            "block";
+                        document.getElementById("upiId").classList.add("error");
+                        isValid = false;
+                    } else {
+                        document.getElementById("upiError").style.display =
+                            "none";
+                        document
+                            .getElementById("upiId")
+                            .classList.remove("error");
+                    }
+
+                    // Validate WhatsApp Number (10 digits)
+                    const whatsappPattern = /^\d{10}$/;
+                    if (
+                        whatsappNumber === "" ||
+                        !whatsappPattern.test(whatsappNumber)
+                    ) {
+                        document.getElementById("whatsappError").style.display =
+                            "block";
+                        document
+                            .getElementById("whatsappNumber")
+                            .classList.add("error");
+                        isValid = false;
+                    } else {
+                        document.getElementById("whatsappError").style.display =
+                            "none";
+                        document
+                            .getElementById("whatsappNumber")
+                            .classList.remove("error");
+                    }
+
+                    if (isValid) {
+                        // Disable submit button
+                        const submitBtn = document.getElementById("submitBtn");
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = "Submitting...";
+
+                        // Submit form data to Formspark
+                        const formData = new FormData(this);
+
+                        // Convert FormData to JSON for proper AJAX submission
+                        const data = {};
+                        formData.forEach((value, key) => {
+                            data[key] = value;
+                        });
+
+                        fetch("https://submit-form.com/Qvg8kG7fI", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Accept: "application/json",
+                            },
+                            body: JSON.stringify(data),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                goToStep(3);
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                                alert(
+                                    "There was an error submitting your form. Please try again.",
+                                );
+                                submitBtn.disabled = false;
+                                submitBtn.textContent =
+                                    "Submit & Claim Rs. 100";
+                            });
+                    }
+                });
+
+            // Initialize on page load
+            init();
+        </script>
+    </body>
+</html>
